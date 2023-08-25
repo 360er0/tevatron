@@ -77,10 +77,12 @@ class EncoderModel(nn.Module):
 
     def forward(self, query: Dict[str, Tensor] = None, passage: Dict[str, Tensor] = None):
         q_reps = self.encode_query(query)
-        q_reps = F.normalize(q_reps, dim=-1)
+        if q_reps is not None:
+            q_reps = F.normalize(q_reps, dim=-1)
         
         p_reps = self.encode_passage(passage)
-        p_reps = F.normalize(p_reps, dim=-1)
+        if p_reps is not None:
+            p_reps = F.normalize(p_reps, dim=-1)
 
         # for inference
         if q_reps is None or p_reps is None:
