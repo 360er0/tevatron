@@ -34,6 +34,10 @@ class ModelArguments:
     projection_in_dim: int = field(default=768)
     projection_out_dim: int = field(default=768)
 
+    # normalize
+    normalize: bool = field(default=False)
+    temperature: float = field(default=1.0)
+    
     # for Jax training
     dtype: Optional[str] = field(
         default="float32",
