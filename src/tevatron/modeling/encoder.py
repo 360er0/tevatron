@@ -52,7 +52,7 @@ class EncoderPooler(nn.Module):
             json.dump(self._config, f)
 
 
-class EncoderModel(nn.Module):
+class EncoderModel(nn.Module, PreTrainedModel):
     TRANSFORMER_CLS = AutoModel
 
     def __init__(self,
