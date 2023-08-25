@@ -99,7 +99,7 @@ def main():
     )
     train_dataset.trainer = trainer
 
-    trainer.train()  # TODO: resume training
+    trainer.train(resume_from_checkpoint=True)  # TODO: resume training
     trainer.save_model()
     if trainer.is_world_process_zero():
         tokenizer.save_pretrained(training_args.output_dir)
