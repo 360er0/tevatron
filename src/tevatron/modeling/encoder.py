@@ -62,6 +62,8 @@ class EncoderModel(nn.Module):
                  pooler: nn.Module = None,
                  untie_encoder: bool = False,
                  negatives_x_device: bool = False
+                 normalize: bool = False,
+                 temperature: float: 1.0,
                  ):
         super().__init__()
         self.lm_q = lm_q
@@ -70,6 +72,8 @@ class EncoderModel(nn.Module):
         self.cross_entropy = nn.CrossEntropyLoss(reduction='mean')
         self.negatives_x_device = negatives_x_device
         self.untie_encoder = untie_encoder
+        self.normalize = normalize
+        self.temperature = temperature
         if self.negatives_x_device:
             if not dist.is_initialized():
                 raise ValueError('Distributed training has not been initialized for representation all gather.')
@@ -78,11 +82,11 @@ class EncoderModel(nn.Module):
 
     def forward(self, query: Dict[str, Tensor] = None, passage: Dict[str, Tensor] = None):
         q_reps = self.encode_query(query)
-        if q_reps is not None:
+        if self.normalize and q_reps is not None:
             q_reps = F.normalize(q_reps, dim=-1)
         
         p_reps = self.encode_passage(passage)
-        if p_reps is not None:
+        if self.normalize and p_reps is not None:
             p_reps = F.normalize(p_reps, dim=-1)
 
         # for inference
@@ -99,7 +103,7 @@ class EncoderModel(nn.Module):
                 p_reps = self._dist_gather_tensor(p_reps)
 
             scores = self.compute_similarity(q_reps, p_reps)
-            scores = scores / 0.01
+            scores = scores / self.temperature
             scores = scores.view(q_reps.size(0), -1)
 
             target = torch.arange(scores.size(0), device=scores.device, dtype=torch.long)
@@ -196,6 +200,8 @@ class EncoderModel(nn.Module):
             pooler=pooler,
             negatives_x_device=train_args.negatives_x_device,
             untie_encoder=model_args.untie_encoder
+            normalize=model_args.normalize,
+            temperature=model_args.temperature,
         )
         return model
 
