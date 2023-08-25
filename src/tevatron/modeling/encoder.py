@@ -63,7 +63,7 @@ class EncoderModel(nn.Module):
                  untie_encoder: bool = False,
                  negatives_x_device: bool = False,
                  normalize: bool = False,
-                 temperature: float: 1.0,
+                 temperature: float = 1.0,
                  ):
         super().__init__()
         self.lm_q = lm_q
