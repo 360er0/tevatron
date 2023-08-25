@@ -27,7 +27,7 @@ class EncoderOutput(ModelOutput):
     scores: Optional[Tensor] = None
 
 
-class EncoderPooler(nn.Module):
+class EncoderPooler(PreTrainedModel):
     def __init__(self, **kwargs):
         super(EncoderPooler, self).__init__()
         self._config = {}
@@ -52,7 +52,7 @@ class EncoderPooler(nn.Module):
             json.dump(self._config, f)
 
 
-class EncoderModel(nn.Module, PreTrainedModel):
+class EncoderModel(PreTrainedModel):
     TRANSFORMER_CLS = AutoModel
 
     def __init__(self,
