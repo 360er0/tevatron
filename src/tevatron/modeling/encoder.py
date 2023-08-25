@@ -61,7 +61,7 @@ class EncoderModel(nn.Module):
                  lm_p: PreTrainedModel,
                  pooler: nn.Module = None,
                  untie_encoder: bool = False,
-                 negatives_x_device: bool = False
+                 negatives_x_device: bool = False,
                  normalize: bool = False,
                  temperature: float: 1.0,
                  ):
