@@ -60,6 +60,7 @@ def main():
         config=config,
         cache_dir=model_args.cache_dir,
     )
+    model.normalize = True
 
     text_max_length = data_args.q_max_len if data_args.encode_is_qry else data_args.p_max_len
     if data_args.encode_is_qry:
